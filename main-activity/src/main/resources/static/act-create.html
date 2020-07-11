@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>天天活动-创建</title>
+    <link rel="stylesheet" href="res/layui/css/layui.css">
+    <link rel="stylesheet" href="res/css/global.css">
+</head>
+<body>
+<div class="my-nav layui-bg-cyan">
+    <div class="layui-fluid">
+        <ul class="layui-nav layui-bg-cyan" lay-filter="">
+            <li class="layui-nav-item"><a href="index.html">主页</a></li>
+            <li class="layui-nav-item"><a href="act-list.html">活动列表</a></li>
+            <li class="layui-nav-item"><a href="act-create.html">发布活动</a></li>
+            <li class="layui-nav-item "><a href="user.html">个人中心</a></li>
+        </ul>
+    </div>
+
+</div>
+<div class="layui-fluid">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>活动创建</legend>
+    </fieldset>
+    <form class="layui-form"> <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
+        <div class="layui-form-item">
+            <label class="layui-form-label">活动标题</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" placeholder="请输入活动标题" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+         <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">招募人数</label>
+            <div class="layui-input-block">
+                <input type="number" name="recruited" placeholder="请输入招募人数" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">简介</label>
+            <div class="layui-input-block">
+                <textarea name="describe" placeholder="请输入简介" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">审核级别</label>
+            <div class="layui-input-block">
+                <input type="radio" name="checkLevel" value="0" title="默认" checked="">
+                <input type="radio" name="checkLevel" value="1" title="需要审核" checked="">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">截止日期</label>
+            <div class="layui-input-block">
+                <input type="text" name="endTime" id="endTime" placeholder="报名结束日期" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+
+
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="*">下一步</button>
+            </div>
+        </div>
+        <!-- 更多表单结构排版请移步文档左侧【页面元素-表单】一项阅览 -->
+    </form>
+</div>
+<div class="layui-footer footer footer-index">
+    <div class="layui-main">
+        <p>© 2020 <a href="http://5keo.com">5keo.com|yuyoyo.cn</a> 201758274050</p>
+        <p>
+            <a href="http://www.cqwu.net" target="_blank">重庆文理学院</a>
+            <a href="404.html" target="_blank">重庆文理学院-软件工程学院</a>
+            <a href="http://www.github.com/" target="_blank" class="layui-hide-xs">GitHub</a>
+            <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="nofollow">XXXXX001</a>
+        </p>
+        <div class="site-union">
+            <p class="site-union-desc">
+        <span>
+          感谢各位老师的教导
+        </span>
+            </p>
+            <p>
+                <a href="404.html">XXX老师</a>
+                <a href="404.html">XXX老师</a>
+                <a href="404.html">XXX老师</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script src="res/layui/layui.all.js"></script>
+<script>
+    var $;
+    //注意：导航 依赖 element 模块，否则无法进行功能性操作
+    layui.use(['element', 'form', 'jquery', 'laydate'], function () {
+        var element = layui.element;
+        var laydate = layui.laydate;
+        var form = layui.form;
+        $ = layui.jquery;
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#endTime' //指定元素
+        });
+
+        form.on("submit", function (data) {
+            console.log("活动创建")
+
+            $.ajax({
+                url: "/act",
+                type: "post",
+                contentType: "application/json",
+                data: JSON.stringify(data.field),
+                success: function (data) {
+                    if (data.code !== 0)
+                        layui.layer.msg("创建失败");
+                    else {
+                        layui.layer.msg("创建成功");
+                        location.href = "/user.html"
+                    }
+                },
+                error: function (data) {
+                    layui.layer.alert("网络错误！")
+                }
+            })
+            return false;
+        })
+        //…
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>天天活动-活动列表</title>
+    <link rel="stylesheet" href="res/layui/css/layui.css">
+    <link rel="stylesheet" href="res/css/global.css">
+</head>
+<body class="">
+<div class="my-nav layui-bg-cyan">
+    <div class="layui-fluid">
+        <ul class="layui-nav layui-bg-cyan" lay-filter="">
+            <li class="layui-nav-item"><a href="index.html">主页</a></li>
+            <li class="layui-nav-item"><a href="act-list.html">活动列表</a></li>
+            <li class="layui-nav-item"><a href="act-create.html">发布活动</a></li>
+            <li class="layui-nav-item "><a href="user.html">个人中心</a></li>
+        </ul>
+    </div>
+
+</div>
+<div class="layui-fluid" style="margin-top: 50px">
+</div>
+<div class="layui-fluid">
+    <div class="layui-form" lay-filter="search">
+        <div class="layui-form-item">
+            <input type="text" name="search" id="search" autocomplete="off" placeholder="搜索" class="layui-input">
+        </div>
+    </div>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>活动</legend>
+    </fieldset>
+    <ul class="act-list"></ul>
+    <div id="pageArea"></div>
+</div>
+<div class="layui-footer footer footer-index">
+    <div class="layui-main">
+        <p>© 2020 <a href="http://5keo.com">5keo.com|yuyoyo.cn</a> 201758274050</p>
+        <p>
+            <a href="http://www.cqwu.net" target="_blank">重庆文理学院</a>
+            <a href="404.html" target="_blank">重庆文理学院-软件工程学院</a>
+            <a href="http://www.github.com/" target="_blank" class="layui-hide-xs">GitHub</a>
+            <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="nofollow">XXXXX001</a>
+        </p>
+        <div class="site-union">
+            <p class="site-union-desc">
+        <span>
+          感谢各位老师的教导
+        </span>
+            </p>
+            <p>
+                <a href="404.html">XXX老师</a>
+                <a href="404.html">XXX老师</a>
+                <a href="404.html">XXX老师</a>
+            </p>
+        </div>
+    </div>
+</div>
+<script src="res/layui/layui.all.js">
+</script>
+<script src="res/js/utils.js"></script>
+<script>
+    var searchValue = "";
+    var $ = layui.jquery;
+    $("#search").keypress(function (event) {
+        if (event.key === "Enter") {
+            searchValue = $("#search").val();
+            search();
+        }
+    });
+
+    function search() {
+        $.ajax({
+            url: "/api/act/list?search=" + searchValue,
+            success: function (data) {
+                if (data.code !== 0) return;
+                showActList(data.data);
+                laypage = layui.laypage;
+                laypage.render({
+                    elem: "pageArea",
+                    count: data.count,
+                    layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip'],
+                    jump: function (data, first) {
+                        if (first) return;
+                        console.log(data);
+                        getActListByApi(data.curr, data.limit, searchValue, function (data) {
+                            if (data.code !== 0) return;
+                            showActList(data.data);
+                        })
+                    }
+                });
+
+
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        search();
+    });
+
+    function showActList(acts) {
+        $(".act-list>.act-item").remove();
+        for (let i = 0; i < acts.length; i++) {
+            $(".act-list").append("" +
+                "<li class=\"act-item \"> " +
+                "<a href='act.html?actId=" + acts[i].id + "'>" +
+                "  <h2>" + acts[i].name + "<span class=\"act-state\">" +ACT_STATE[ acts[i].state] + "</span></h2>\n" +
+                "   <p>" + acts[i].describe + "</p>" +
+                "</a>" +
+                "</li>");
+        }
+    }
+</script>
+</body>
+</html>

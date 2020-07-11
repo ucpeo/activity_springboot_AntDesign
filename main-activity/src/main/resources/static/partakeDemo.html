@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>天天活动-活动详情</title>
+    <link rel="stylesheet" href="res/layui/css/layui.css">
+    <link rel="stylesheet" href="res/css/global.css">
+</head>
+<body class="">
+<div class="my-nav layui-bg-cyan">
+    <div class="layui-container">
+        <ul class="layui-nav layui-bg-cyan" lay-filter="">
+            <li class="layui-nav-item"><a href="index.html">主页</a></li>
+            <li class="layui-nav-item"><a href="act-list.html">活动列表</a></li>
+            <li class="layui-nav-item"><a href="act-create.html">发布活动</a></li>
+            <li class="layui-nav-item "><a href="user.html">个人中心</a></li>
+        </ul>
+    </div>
+
+</div>
+<div class="layui-container" style="margin-top: 50px">
+</div>
+<div class="layui-container">
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <h1 class="act-name">2020-5-29 打卡</h1>
+        </div>
+        <div class="layui-card-body">
+            <p class="act-desc">
+                一般情况下，用户需要连接网站，访问请求需要前往服务器调取内容，当如果服务器离用户越远，就会出现访问时间越久，这就会出现“节点”，节点是针对服务器分身至各个地区，当用户访问的时候直接请求离用户最近的服务器调取内容，对于跨国访问更是需要
+            </p>
+        </div>
+    </div>
+
+    <div class="layui-form partake-form" style="padding: 10px" lay-filter="partake-form">
+
+        <fieldset class="layui-elem-field ">
+            <h3 class="actForm-title">根据你的了解，请简要描述Layui是什么，以及layui解决的什么问题，或者他有什么优势。</h3>
+            <div class="layui-form-item layui-form-text">
+                <div class="layui-input-block">
+                    <textarea placeholder="请输入内容" class="layui-textarea" name="desc"></textarea>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="layui-elem-field">
+            <h3 class="actForm-title">根据你的了解，请简要描述Layui是什么，以及layui解决的什么问题，或者他有什么优势。</h3>
+            <div class="layui-form-item ">
+                <div class="layui-input-block">
+                    <input type="checkbox" title="面向后端程序员" value="jkjlgh" class="layui-input" name="ss"/>
+                    <input type="checkbox" title="轻量级的" value="hhjj" class="layui-input" name="ss"/>
+                    <input type="checkbox" title="极简风格" value="242" class="layui-input" name="ss"/>
+                    <input type="checkbox" title="极简风格" value="224" class="layui-input" name="ss"/>
+                    <input type="checkbox" title="极简风格" value="safa" class="layui-input" name="ss"/>
+                    <input type="checkbox" title="极简风格"  value="23" class="layui-input" name="ss"/>
+                    <input type="checkbox" title="极简风格" value="123" class="layui-input" name="ss"/>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="layui-elem-field ">
+            <h3 class="actForm-title">根据你的了解，请简要描述Layui是什么，以及layui解决的什么问题，或者他有什么优势。</h3>
+            <div class="layui-form-item ">
+                <div class="layui-input-block">
+                    <input type="radio" title="面向后端程序员" class="layui-input" name="aa"/>
+                    <input type="radio" title="轻量级的" value="1" class="layui-input" name="aa"/>
+                    <input type="radio" title="极简风格" value="2" class="layui-input" name="aa"/>
+                    <input type="radio" title="极简风格" value="0"  class="layui-input" name="aa"/>
+                    <input type="radio" title="极简风格" value="3"  class="layui-input" name="aa"/>
+                    <input type="radio" title="极简风格" value="4"  class="layui-input" name="aa"/>
+                    <input type="radio" title="极简风格" value="5"  class="layui-input" name="aa"/>
+                </div>
+            </div>
+        </fieldset>
+
+    </div>
+
+
+    <div>
+        <button class="layui-btn layui-btn-fluid" onclick="sub()">提交</button>
+    </div>
+
+
+</div>
+<script src="res/layui/layui.all.js">
+</script>
+<script src="res/js/utils.js"></script>
+<script>
+    var $ = layui.jquery;
+    $(document).ready(function () {
+        var parms = getSearchObj();
+        loadActInfo(parms.partakeId);
+    });
+
+    function loadActInfo(pid) {
+        /* getActInfo(actId, function (data) {
+
+         });*/
+
+        getPartake(pid, function (data) {
+            console.log(data);
+            var partake = data.data;
+            $(".act-name").text(partake.act.name)
+            $(".act-desc").text(partake.act.describe)
+            loadActForm(partake.act.id);
+
+        })
+
+    }
+
+    function loadActForm(actId) {
+        getActFormList(actId, function (data) {
+            console.log(data);
+            data.data.forEach(function (actform) {
+                $(".partake-form").append(createFormItemDoc(actform));
+            });
+            layui.form.render();
+        });
+    }
+
+    function takeAct() {
+        joinAct(getSearchObj().actId, function (data) {
+            console.log(data);
+        })
+    }
+
+    function sub() {
+       getFormVal("partake-form");
+    }
+
+
+</script>
+</body>
+</html>

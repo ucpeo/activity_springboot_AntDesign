@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>天天活动-仪表盘</title>
+    <link rel="stylesheet" href="res/layui/css/layui.css">
+    <link rel="stylesheet" href="res/css/global.css">
+    <link rel="stylesheet" href="res/css/dashboard.css">
+</head>
+<body style="background: #F2F2F2">
+
+<div class="my-nav layui-bg-cyan">
+    <div class="layui-fluid">
+        <ul class="layui-nav layui-bg-cyan" lay-filter="">
+            <li class="layui-nav-item"><a href="index.html">主页</a></li>
+            <li class="layui-nav-item"><a href="act-list.html">活动列表</a></li>
+            <li class="layui-nav-item"><a href="act-create.html">发布活动</a></li>
+            <li class="layui-nav-item "><a href="user.html">个人中心</a></li>
+        </ul>
+    </div>
+
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md8">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md6">
+                    <div class="layui-card">
+                        <div class="layui-card-header">基本信息</div>
+                        <div class="layui-card-body layui-text">
+                            <table class="layui-table">
+                                <colgroup>
+                                    <col width="100">
+                                    <col>
+                                </colgroup>
+                                <tbody>
+                                <tr>
+                                    <td>活动名称</td>
+                                    <td id="act-name">
+                                        2020-6-1 打卡签到
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>状态</td>
+                                    <td id="act-state">
+                                        创建
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>招募人数</td>
+                                    <td id="act-recruited">500</td>
+                                </tr>
+                                <tr>
+                                    <td>参与人数</td>
+                                    <td style="padding-bottom: 0;" id="act-participants">
+                                        20
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="layui-card">
+                        <div class="layui-card-header">数据</div>
+                        <div class="layui-card-body">
+                            <div class="" lay-anim="" lay-indicator="inside" lay-arrow="none" style="width: 100%; ">
+                                <div carousel-item="">
+                                    <ul class="layui-row layui-col-space10 bg-white">
+                                        <li class="layui-col-xs6">
+                                            <a lay-href="app/content/comment.html" class="layadmin-backlog-body">
+                                                <h3>招募人数</h3>
+                                                <p><cite class="act-recruited">500</cite></p>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs6">
+                                            <a lay-href="app/forum/list.html" class="layadmin-backlog-body">
+                                                <h3>参与人数</h3>
+                                                <p><cite class="act-participants">12</cite></p>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs6">
+                                            <a lay-href="template/goodslist.html" class="layadmin-backlog-body">
+                                                <h3>已完成</h3>
+                                                <p><cite class="act-success">6</cite></p>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs6">
+                                            <a href="javascript:;" onclick="layer.tips('不跳转', this, {tips: 3});"
+                                               class="layadmin-backlog-body">
+                                                <h3>进行中</h3>
+                                                <p><cite class="act-ing">20</cite></p>
+                                            </a>
+                                        </li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-header">
+                            操作
+                        </div>
+                        <div class="layui-card-body">
+                            <button class="layui-btn" onclick="addForm()">创建表单</button>
+                            <button class="layui-btn" onclick="addRes()">添加资源</button>
+                            <button class="layui-btn" onclick="rele();">发布活动</button>
+                            <button class="layui-btn layui-btn-warm" onclick="stopActivity()">停止活动</button>
+                            <button class="layui-btn layui-btn-danger" onclick="deleteActivity()">删除</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-header">
+                            审核列表
+                        </div>
+                        <div class="layui-card-body">
+                            <div class="check_table" id="check_table" lay-filter="check_table"></div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-header">
+                            已完成
+                        </div>
+                        <div class="layui-card-body">
+                            <div class="success_table" id="success_table" lay-filter="success_table"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="layui-col-md4">
+
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="layui-card" style="padding-bottom: 100px;padding-left: 10px;padding-right: 10px">
+                <div class="layui-card-header">效果报告</div>
+
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                    <legend>总进度</legend>
+                </fieldset>
+
+                <div lay-filter="process-all" class="layui-progress layui-progress-big" style="">
+                    <div class="layui-progress-bar" style="width: 0%;">
+                        <span class="layui-progress-text">0%</span>
+                    </div>
+                </div>
+
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                    <legend>报名进度</legend>
+                </fieldset>
+
+                <div lay-filter="process-apply" class="layui-progress layui-progress-big  " style="">
+                    <div class="layui-progress-bar layui-bg-blue" style="width: 0%;">
+                        <span class="layui-progress-text">0%</span></div>
+                </div>
+
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                    <legend>参与完成进度</legend>
+                </fieldset>
+
+                <div lay-filter="process-success" class="layui-progress layui-progress-big  " style="">
+                    <div class="layui-progress-bar layui-bg-black"
+                         style="width: 0%;">
+                        <span class="layui-progress-text">0%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    帮助
+                </div>
+                <div class="layui-card-body layui-text layadmin-text">
+                    <p>也许这一刻你无比迷茫,又或许只是全新的开始。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="layui-footer footer footer-index">
+    <div class="layui-main">
+        <p>© 2020 <a href="http://5keo.com">5keo.com|yuyoyo.cn</a> 201758274050</p>
+        <p>
+            <a href="http://www.cqwu.net" target="_blank">重庆文理学院</a>
+            <a href="404.html" target="_blank">重庆文理学院-软件工程学院</a>
+            <a href="http://www.github.com/" target="_blank" class="layui-hide-xs">GitHub</a>
+            <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="nofollow">XXXXX001</a>
+        </p>
+        <div class="site-union">
+            <p class="site-union-desc">
+        <span>
+          感谢各位老师的教导
+        </span>
+            </p>
+            <p>
+                <a href="404.html">XXX老师</a>
+                <a href="404.html">XXX老师</a>
+                <a href="404.html">XXX老师</a>
+            </p>
+        </div>
+    </div>
+</div>
+<script src="res/layui/layui.all.js"></script>
+<script src="res/js/utils.js"></script>
+<script>
+    var $ = layui.jquery;
+    var G_flag = false;
+    $(document).ready(function () {
+        loadActInfo();
+        loadBaseInfo();
+    });
+
+
+    function addRes() {
+        layui.layer.log("暂未启用，等待后续开放");
+    }
+
+    function loadActInfo() {
+        var actId = getSearchObj().id;
+
+        getActInfo(actId, function (data) {
+            console.log(data);
+            var act = data.data;
+            $("#act-state").text(ACT_STATE[act.state]);
+            $("#act-name").text(act.name);
+            $("#act-recruited").text(act.recruited)
+            $("#act-participants").text(act.participants);
+        });
+    }
+
+    function rele() {
+        releaseAct(getSearchObj().id, function (data) {
+            if (data.code === 0) {
+                layui.layer.alert("活动发布成功", function () {
+                    reload();
+                });
+
+            }
+
+        });
+        return false;
+    }
+
+    function addForm() {
+        location.href = "/form.html?actId=" + getSearchObj().id;
+    }
+
+    function stopActivity() {
+        stopAct(getSearchObj().id, function (data) {
+            layui.layer.alert("活动结束，其他用户无法进行报名参与");
+        });
+    }
+
+    var times = 0;
+
+    function deleteActivity() {
+        times++;
+        if (times === 3) {
+            times = 0;
+            deleteAct(getSearchObj().id, function (data) {
+                console.log(data);
+                layui.layer.alert("删除成功,返回活动列表", function () {
+                    location.href = "/my-activity.html";
+                })
+            });
+            return;
+        }
+        layui.layer.log("危险功能，点击" + (3 - times) + "次后才能继续删除");
+    }
+
+    function pageOK() {
+        var actId = getSearchObj().id;
+        if (G_flag) return;
+        G_flag = true;
+        console.log("pageOk ")
+        var table = layui.table;
+
+        table.render({
+            elem: '#success_table'
+            , height: 420
+            , url: '/partake/successList/' + actId //数据接口
+            , title: '已完成的参与'
+            , page: true //开启分页
+            , request: {
+                pageName: 'curr' //页码的参数名称，默认：page
+                , limitName: 'size' //每页数据量的参数名，默认：limit
+            }
+            , cols: [[ //表头
+                {field: 'id', title: 'ID', width: 150}
+                , {field: 'state', title: '状态', width: 150}
+                , {
+                    field: 'submitTime', templet: function (d) {
+                        return layui.util.toDateString(d.submitTime, "yyyy-MM-dd");
+                    }, title: '提交时间', width: 160
+                }
+                , {
+                    field: 'username', templet: function (d) {
+                        return d.user.username;
+                    }, title: '用户名', width: 150
+                }
+                , {
+                    field: 'fullName', templet: function (d) {
+                        return "<div>" + d.user.fullName + "</div>"
+                    }, title: '姓名', width: 150
+                }
+                , {
+                    field: 'phone', templet: function (d) {
+                        return d.user.phone
+                    }, title: '联系方式', width: 150
+                }
+                , {
+                    fixed: 'right', width: 165, align: 'center', templet: function (d) {
+                        return "<a href='/partake.html?partakeId=" + d.id + "' target='_blank' class='layui-btn layui-btn-sm'>查阅</a>"
+                    }
+                }
+            ]]
+        });
+        table.render({
+            elem: '#check_table'
+            , height: 420
+            , url: '/partake/check/' + actId //数据接口
+            , title: '已完成的参与'
+            , page: true //开启分页
+            , request: {
+                pageName: 'curr' //页码的参数名称，默认：page
+                , limitName: 'size' //每页数据量的参数名，默认：limit
+            }
+            , cols: [[ //表头
+                {field: 'id', title: 'ID', width: 150}
+                , {field: 'state', title: '状态', width: 150}
+                , {
+                    field: 'submitTime', templet: function (d) {
+                        return layui.util.toDateString(d.submitTime, "yyyy-MM-dd");
+                    }, title: '提交时间', width: 160
+                }
+                , {
+                    field: 'username', templet: function (d) {
+                        return d.user.username;
+                    }, title: '用户名', width: 150
+                }
+                , {
+                    field: 'fullName', templet: function (d) {
+                        return "<div>" + d.user.fullName + "</div>"
+                    }, title: '姓名', width: 150
+                }
+                , {
+                    field: 'phone', templet: function (d) {
+                        return d.user.phone
+                    }, title: '联系方式', width: 150
+                }
+                , {
+                    fixed: 'right', width: 200, align: 'center', templet: function (d) {
+                        return "<a href='/partake.html?partakeId=" + d.id + "' target='_blank' class='layui-btn layui-btn-sm'>查阅</a>" +
+                            "<button  onclick='partPass(" + d.id + ")' class='layui-btn layui-btn-sm'>通过</button>" +
+                            "<button onclick='partReset(" + d.id + ")' class='layui-btn layui-btn-sm'>驳回</button>"
+
+                    }
+                }
+            ]]
+        });
+
+    }
+
+    function loadBaseInfo() {
+        var id = getSearchObj().id;
+        getActBaseInfo(id, function (data) {
+            if (data.code !== 0) return;
+            console.log(data);
+            var info = data.data;
+            $(".act-recruited").text(info.recruited);
+            $(".act-participants").text(info.participants);
+            $(".act-success").text(info.success);
+            $(".act-ing").text(info.ing);
+
+            var all_process_value = parseInt(info.success / info.recruited * 100) + "%";
+            var apply_process_value = parseInt(info.participants / info.recruited * 100) + "%";
+            var apply_success_value = parseInt(info.success / info.participants * 100) + "%";
+
+            layui.element.progress('process-all', all_process_value);
+            layui.element.progress('process-apply', apply_process_value);
+            layui.element.progress('process-success', apply_success_value);
+            pageOK();
+        });
+        getWaitCheckPartakes();
+    }
+
+
+    function getWaitCheckPartakes() {
+        var id = getSearchObj().id;
+        getCheckParts(id, function (data) {
+            var list = data.data;
+            for (i in list) {
+                $(".part-check-list").append(createCheckItemDom(list[i]));
+            }
+
+        });
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>天天活动-登录</title>
+    <link rel="stylesheet" href="res/layui/css/layui.css">
+    <link rel="stylesheet" href="res/css/global.css">
+</head>
+<body>
+
+<div class="my-nav layui-bg-cyan">
+    <div class="layui-fluid">
+        <ul class="layui-nav layui-bg-cyan" lay-filter="">
+            <li class="layui-nav-item"><a href="index.html">主页</a></li>
+            <li class="layui-nav-item"><a href="act-list.html">活动列表</a></li>
+            <li class="layui-nav-item"><a href="act-create.html">发布活动</a></li>
+            <li class="layui-nav-item "><a href="user.html">个人中心</a></li>
+        </ul>
+    </div>
+
+</div>
+
+<div class="layui-container" style="margin-top: 50px">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form"> <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">用户名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="username" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">密码</label>
+                    <div class="layui-input-block">
+                        <input type="password" name="password" placeholder="请输入密码" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="*">登录</button>
+                        <a class="layui-btn layui-btn-primary" href="reg.html">去注册</a>
+                    </div>
+                </div>
+                <!-- 更多表单结构排版请移步文档左侧【页面元素-表单】一项阅览 -->
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="layui-footer footer footer-index">
+    <div class="layui-main">
+        <p>© 2020 <a href="http://5keo.com">5keo.com|yuyoyo.cn</a> 201758274050</p>
+        <p>
+            <a href="http://www.cqwu.net" target="_blank">重庆文理学院</a>
+            <a href="404.html" target="_blank">重庆文理学院-软件工程学院</a>
+            <a href="http://www.github.com/" target="_blank" class="layui-hide-xs">GitHub</a>
+            <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="nofollow">XXXXX001</a>
+        </p>
+        <div class="site-union">
+            <p class="site-union-desc">
+        <span>
+          感谢各位老师的教导
+        </span>
+            </p>
+            <p>
+                <a href="404.html">XXX老师</a>
+                <a href="404.html">XXX老师</a>
+                <a href="404.html">XXX老师</a>
+            </p>
+        </div>
+    </div>
+</div>
+<script src="res/layui/layui.all.js"></script>
+<script>
+    var $;
+    //注意：导航 依赖 element 模块，否则无法进行功能性操作
+    layui.use(['element','jquery', 'form'], function () {
+        var element = layui.element;
+        var form = layui.form;
+        $ = layui.jquery;
+        form.on('submit', function (data) {
+            console.log(data);
+            $.ajax({
+                url: "/user/login",
+                contentType: "application/json",
+                data: JSON.stringify(data.field),
+                type:"json",
+                success: function (data) {
+                    if (data.code != 0)
+                        layui.layer.alert(data.msg);
+                    else {
+                        layui.layer.msg("成功！");
+                        location.href = "/user.html"
+                    }
+                },
+                error: function () {
+                    layui.layer.alert("网络错误");
+                }
+            })
+            return false;
+        })
+
+        //…
+    });
+</script>
+
+
+</body>
+
+</html>

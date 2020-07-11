@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>天天活动-添加表单</title>
+    <link rel="stylesheet" href="res/layui/css/layui.css">
+    <link rel="stylesheet" href="res/css/global.css">
+    <link rel="stylesheet" href="res/css/footer.css">
+</head>
+<body class="">
+<div class="my-nav layui-bg-cyan">
+    <div class="layui-fluid">
+        <ul class="layui-nav layui-bg-cyan" lay-filter="">
+            <li class="layui-nav-item"><a href="index.html">主页</a></li>
+            <li class="layui-nav-item"><a href="act-list.html">活动列表</a></li>
+            <li class="layui-nav-item"><a href="act-create.html">发布活动</a></li>
+            <li class="layui-nav-item "><a href="user.html">个人中心</a></li>
+        </ul>
+    </div>
+
+</div>
+<div class="layui-fluid" style="margin-top: 50px">
+</div>
+<div class="layui-container">
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <h1 id="actName">
+
+            </h1>
+        </div>
+        <div class="layui-card-body">
+            <p id="act_desc">
+
+            </p>
+        </div>
+    </div>
+    <div class="form-area">
+
+    </div>
+    <div class="form-temp layui-form layui-form-pane " lay-filter="temp">
+        <div class="layui-form-item">
+            <label class="layui-form-label">表单项名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" placeholder="请输入表单项名称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item append" pane>
+            <label class="layui-form-label">类型</label>
+            <div class="layui-input-block " pane="" id="addType">
+                <input class="layui-input" type="radio" name="type" value="0" title="单选" checked>
+                <input class="layui-input" type="radio" name="type" value="1" title="多选">
+                <input class="layui-input" type="radio" name="type" value="2" title="输入文本" lay-filter="inputText">
+            </div>
+        </div>
+        <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;padding: 20px 15px">
+            <legend>选择项</legend>
+            <div class="option">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">选择项</label>
+                    <div class="layui-input-block">
+                        <input type="text" placeholder="请输入选择项值" name="option[0]" autocomplete="off"
+                               class="layui-input">
+
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-btn-normal layui-btn " onclick="appendItem()">添加项目</div>
+            </div>
+        </fieldset>
+
+
+        <div class="layui-form-item">
+            <div class="layui-btnnormal layui-btn layui-btn-fluid" onclick="saveItem()">保存当前项并添加新项目</div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-btn-normal layui-btn layui-btn-fluid" onclick="dashboard()">返回仪表盘</div>
+        </div>
+    </div>
+</div>
+
+<div class="layui-footer footer footer-index">
+    <div class="layui-main">
+        <p>© 2020 <a href="http://5keo.com">5keo.com|yuyoyo.cn</a> 201758274050</p>
+        <p>
+            <a href="http://www.cqwu.net" target="_blank">重庆文理学院</a>
+            <a href="404.html" target="_blank">重庆文理学院-软件工程学院</a>
+            <a href="http://www.github.com/" target="_blank" class="layui-hide-xs">GitHub</a>
+            <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="nofollow">XXXXX001</a>
+        </p>
+        <div class="site-union">
+            <p class="site-union-desc">
+        <span>
+          感谢各位老师的教导
+        </span>
+            </p>
+            <p>
+                <a href="404.html">XXX老师</a>
+                <a href="404.html">XXX老师</a>
+                <a href="404.html">XXX老师</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script src="res/layui/layui.all.js">
+</script>
+<script src="res/js/utils.js"></script>
+<script>
+    var $ = layui.jquery;
+    var types = ["单选", "多选", "输入文本"];
+
+    function loadActFormList(actId) {
+        console.log("载actform")
+        if (actId == null)
+            actId = getSearchObj().actId;
+
+        getActFormList(actId, function (data) {
+            var list = data.data;
+            for (let i = 0; i < list.length; i++) {
+                var options = list[i].optionList;
+                var opshtml = "";
+                options.forEach(function (data) {
+                    opshtml = opshtml + "<blockquote class=\"layui-elem-quote\">" + data.value + "</blockquote>\n";
+
+
+                })
+
+                var type = types[list[i].type];
+
+                $(".form-area").append("<fieldset  class=\"layui-elem-field site-demo-button item\" style=\"margin-top: 30px;padding: 20px 15px\">\n" +
+                    "             <legend>" + list[i].name + " <span class=\"\" >--" + type + "</span></legend>\n" +
+                    opshtml +
+                    "         </fieldset>")
+
+
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        var urlitem = getSearchObj();
+        var actId = urlitem.actId;
+
+        if (actId != null) {
+            loadActInfo(actId);
+            loadActFormList(actId)
+
+        }
+    });
+
+    function loadActInfo(id) {
+        getActInfo(id, function (data) {
+            console.log(data);
+            var act = data.data;
+            $("#actName").text(act.name);
+            $("#act_desc").text(act.describe);
+        });
+    }
+
+
+    layui.use(['form'], function () {
+        layui.form.render();
+    })
+    $(document).ready(function () {
+        var form = layui.form;
+        layui.form.render();
+        form.on("radio(inputText)", function (data) {
+            console.log("选择输入文本")
+            $(".option .layui-form-item").remove();
+            layui.form.render();
+        })
+    });
+
+    function appendItem() {
+        if ($("#addType [name=type]:checked").val() == 2) {
+            layui.layer.alert("只有单选和多选可以添加选择项");
+            return;
+        }
+        var len = $(".option>.layui-form-item").length;
+        $(".option").append(" <div class=\"layui-form-item\">\n" +
+            "                    <label class=\"layui-form-label\">选择项</label>\n" +
+            "                    <div class=\"layui-input-block\">\n" +
+            "                        <input type=\"text\"  name='option[" + len + "]' placeholder=\"请输入选择项值\" autocomplete=\"off\" class=\"layui-input\">\n" +
+            "\n" +
+            "                    </div>\n" +
+            "                </div>");
+        layui.form.render();
+    }
+
+    function saveItem() {
+        var types = ["单选", "多选", "文本输入"];
+        var data = layui.form.val("temp");
+        console.log(data);
+        var item = {};
+        item.name = data.name;
+        if (item.name === "") {
+            layui.layer.alert("表单项名称不能为空");
+            return;
+        }
+        item.type = data.type;
+        var options = [];
+        for (key in data) {
+            if (key.indexOf("option[") === 0) {
+                if (data[key] == "") {
+                    layui.layer.alert("选项值不能空，如为输入文本请选择类型为输入文本");
+                    return;
+                }
+                options.push(data[key]);
+            }
+        }
+        if (item.type != 2 && options.length < 2) {
+            layui.layer.alert("选择项必须大于等于2项");
+            return;
+        }
+
+        item.options = options;
+
+
+        var actForm = {};
+        actForm.name = item.name;
+        actForm.type = item.type;
+        actForm.optionList = [];
+
+        var opshtml = "";
+        options.forEach(function (data) {
+            actForm.optionList.push({value: data});
+            opshtml = opshtml + "<blockquote class=\"layui-elem-quote\">" + data + "</blockquote>\n"
+        })
+        console.log(actForm);
+        saveActForm(getSearchObj().actId, actForm, function (data) {
+            console.log(data);
+            if (data.code === 0) {
+                location.reload();
+            } else
+                layui.layer.ready(data.msg);
+        })
+    }
+
+
+    function releaseActivity() {
+        var obj = getSearchObj();
+        releaseAct(obj.actId, function (data) {
+            console.log(data);
+        });
+    }
+
+
+    function dashboard() {
+        location.href = "/dashboard.html?id=" + getSearchObj().actId;
+    }
+
+</script>
+</body>
+</html>

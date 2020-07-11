@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>天天活动-活动详情</title>
+    <link rel="stylesheet" href="res/layui/css/layui.css">
+    <link rel="stylesheet" href="res/css/global.css">
+</head>
+<body class="">
+<div class="my-nav layui-bg-cyan">
+    <div class="layui-fluid">
+        <ul class="layui-nav layui-bg-cyan" lay-filter="">
+            <li class="layui-nav-item"><a href="index.html">主页</a></li>
+            <li class="layui-nav-item"><a href="act-list.html">活动列表</a></li>
+            <li class="layui-nav-item"><a href="act-create.html">发布活动</a></li>
+            <li class="layui-nav-item "><a href="user.html">个人中心</a></li>
+        </ul>
+    </div>
+
+</div>
+<div class="layui-fluid" style="margin-top: 50px">
+</div>
+<div class="layui-container">
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <h1 class="act-name">2020-5-29 打卡</h1>
+        </div>
+        <div class="layui-card-body">
+            <p class="act-desc">
+                一般情况下，用户需要连接网站，访问请求需要前往服务器调取内容，当如果服务器离用户越远，就会出现访问时间越久，这就会出现“节点”，节点是针对服务器分身至各个地区，当用户访问的时候直接请求离用户最近的服务器调取内容，对于跨国访问更是需要
+            </p>
+        </div>
+    </div>
+
+    <div class="layui-form partake-form" style="padding: 10px" lay-filter="partake-form">
+
+
+    </div>
+
+
+    <div>
+        <button class="layui-btn layui-btn-fluid" onclick="submitForm()">提交</button>
+    </div>
+
+
+</div>
+<div class="layui-footer footer footer-index">
+    <div class="layui-main">
+        <p>© 2020 <a href="http://5keo.com">5keo.com|yuyoyo.cn</a> 201758274050</p>
+        <p>
+            <a href="http://www.cqwu.net" target="_blank">重庆文理学院</a>
+            <a href="404.html" target="_blank">重庆文理学院-软件工程学院</a>
+            <a href="http://www.github.com/" target="_blank" class="layui-hide-xs">GitHub</a>
+            <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="nofollow">XXXXX001</a>
+        </p>
+        <div class="site-union">
+            <p class="site-union-desc">
+        <span>
+          感谢各位老师的教导
+        </span>
+            </p>
+            <p>
+                <a href="404.html">XXX老师</a>
+                <a href="404.html">XXX老师</a>
+                <a href="404.html">XXX老师</a>
+            </p>
+        </div>
+    </div>
+</div>
+<script src="res/layui/layui.all.js">
+</script>
+<script src="res/js/utils.js"></script>
+<script>
+    var $ = layui.jquery;
+    $(document).ready(function () {
+        var parms = getSearchObj();
+        loadActInfo(parms.partakeId);
+    });
+
+    function loadActInfo(pid) {
+        getPartake(pid, function (data) {
+            console.log(data);
+            var partake = data.data;
+            $(".act-name").text(partake.act.name + ":" + PART_STATE[partake.state]);
+            $(".act-desc").text(partake.act.describe)
+            loadActForm(partake.act.id);
+        })
+    }
+
+    function loadActForm(actId) {
+        getActFormList(actId, function (data) {
+            console.log(data);
+            data.data.forEach(function (actform) {
+                $(".partake-form").append(createFormItemDoc(actform));
+            });
+            layui.form.render();
+
+            var parms = getSearchObj();
+            loadUserInput(parms.partakeId);
+        });
+    }
+
+    function takeAct() {
+        joinAct(getSearchObj().actId, function (data) {
+            console.log(data);
+        })
+    }
+
+    function submitForm() {
+        console.log(getFormVal('partake-form'));
+        submitActForm(getSearchObj().partakeId, getFormVal('partake-form'), function (data) {
+            console.log(data);
+            if (data.code === 0) {
+                layui.layer.alert("提交成功", function () {
+                    location.href = "/my-partake.html";
+                });
+            }
+        });
+
+
+    }
+
+    function loadUserInput(pid) {
+        getPartFormBypartake(pid, function (data) {
+            console.log(data);
+            showVal(data.data)
+        });
+    }
+
+    function showVal(partForm) {
+        var arr = [];
+
+        if (Array.isArray(partForm))
+            arr = partForm;
+        else if (partForm != null)
+            arr.push(partForm);
+
+        arr.forEach(function (item) {
+
+            var type = item.actForm.type;
+
+            var name = item.actForm.id;
+
+            var values = [];
+            if (type === FORM_TYPE_WRITE) {
+                values.push(item.value);
+            } else {
+                var ops = item.optionList;
+                for (i in ops) {
+                    values.push(ops[i].id);
+                }
+            }
+            if (type === FORM_TYPE_WRITE) {
+                $("textarea[name=" + name + "]").val(values[0]);
+            } else {
+                values.forEach(function (value) {
+                    var str = "[name=" + name + "][value=" + value + "]";
+                    console.log(str);
+                    $(str).prop("checked", true);
+                })
+            }
+
+            console.log({id: name, values});
+
+        });
+
+        layui.form.render();
+    }
+
+
+</script>
+</body>
+</html>
