@@ -22,7 +22,7 @@
 
 </div>
 
-<div class="layui-fluid">
+<div class="layui-fluid main">
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md8">
             <div class="layui-row layui-col-space15">
@@ -102,7 +102,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="layui-col-md12">
+                <div class="layui-col-md12" id="operation">
                     <div class="layui-card">
                         <div class="layui-card-header">
                             操作
@@ -111,15 +111,18 @@
                             <button class="layui-btn" onclick="addForm()">创建表单</button>
                             <button class="layui-btn" onclick="addRes()">添加资源</button>
                             <button class="layui-btn" onclick="rele();">发布活动</button>
+                            <!--                            <button class="layui-btn layui-btn-normal" onclick="analysis();">数据分析</button>-->
                             <button class="layui-btn layui-btn-warm" onclick="stopActivity()">停止活动</button>
                             <button class="layui-btn layui-btn-danger" onclick="deleteActivity()">删除</button>
                         </div>
                     </div>
                 </div>
+
                 <div class="layui-col-md12">
                     <div class="layui-card">
                         <div class="layui-card-header">
                             审核列表
+                            <a class="float-right layui-icon layui-icon-close" onclick="closeCard(this)"></a>
                         </div>
                         <div class="layui-card-body">
                             <div class="check_table" id="check_table" lay-filter="check_table"></div>
@@ -127,10 +130,13 @@
                         </div>
                     </div>
                 </div>
+
+
                 <div class="layui-col-md12">
                     <div class="layui-card">
                         <div class="layui-card-header">
                             已完成
+                            <a class="float-right layui-icon layui-icon-close" onclick="closeCard(this)"></a>
                         </div>
                         <div class="layui-card-body">
                             <div class="success_table" id="success_table" lay-filter="success_table"></div>
@@ -140,11 +146,8 @@
 
             </div>
 
-            <div class="layui-col-md4">
-
-            </div>
         </div>
-        <div class="layui-col-md4">
+        <div class="layui-col-md4" style="position: sticky;top: 60px">
             <div class="layui-card" style="padding-bottom: 100px;padding-left: 10px;padding-right: 10px">
                 <div class="layui-card-header">效果报告</div>
 
@@ -180,15 +183,55 @@
             </div>
             <div class="layui-card">
                 <div class="layui-card-header">
-                    帮助
+                    数据分析
                 </div>
                 <div class="layui-card-body layui-text layadmin-text">
-                    <p>也许这一刻你无比迷茫,又或许只是全新的开始。</p>
+                    <div class="layui-btn-container">
+                        <button onclick="chart(1)" class="layui-btn layui-btn-primary  layui-btn-fluid">生成馅饼图</button>
+                        <button onclick="chart(2)" class="layui-btn layui-btn-primary   layui-btn-fluid">生成圆形图</button>
+                        <button onclick="chart(3)" class="layui-btn  layui-btn-primary layui-btn-fluid">生成统计图</button>
+                        </button>
+                    </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
+
+<!--弹出层-->
+<div class="layui-card" id="app" style="display: none">
+    <div class="layui-card-body">
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label">选择表单项</label>
+                <div class="layui-input-block">
+                    <select class="form" name="form" lay-verify="required">
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">类型</label>
+                <div class="layui-input-block">
+                    <select class="type" name="type" lay-verify="required">
+                        <option value="1">馅饼图</option>
+                        <option value="2">圆形图</option>
+                        <option value="3">条形图</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="echartCreate">生成</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
 <div class="layui-footer footer footer-index">
     <div class="layui-main">
         <p>© 2020 <a href="http://5keo.com">5keo.com|yuyoyo.cn</a> 201758274050</p>
@@ -214,9 +257,20 @@
 </div>
 <script src="res/layui/layui.all.js"></script>
 <script src="res/js/utils.js"></script>
+<script src="res/js/echarts.min.js"></script>
+
 <script>
     var $ = layui.jquery;
+    const layer = layui.layer;
     var G_flag = false;
+    var actForms = null;
+
+
+    function closeCard(ele) {
+        $(ele).parent().parent().fadeOut(300, () => $(ele).parent().parent().remove())
+    }
+
+
     $(document).ready(function () {
         loadActInfo();
         loadBaseInfo();
@@ -224,7 +278,267 @@
 
 
     function addRes() {
-        layui.layer.log("暂未启用，等待后续开放");
+        layui.layer.msg("暂未启用，等待后续开放");
+    }
+
+    layui.form.on('submit(echartCreate)', function (data) {
+        layer.closeAll();
+        let formId = data.field.form;
+        let chartType = data.field.type;
+        getFormItemAnalysis(formId, function (data) {
+            if (data.code == 0) {
+
+                let item = actForms.filter(e => e.id == formId)[0];
+                optionmap = {};
+                item.optionList.map(e => {
+                    optionmap[e.id] = e
+                    e.selected = 0;
+                });
+                for (let e of data.data) {
+                    optionmap[e.optionId].selected = e.selected
+                }
+
+
+                let seriesData = [];
+                let legendData = [];
+                let selected = [];
+                for (const key in optionmap) {
+                    seriesData.push({name: optionmap[key].value, value: optionmap[key].selected});
+                    legendData.push(optionmap[key].value);
+                }
+
+
+                seriesData=seriesData.sort((a, b) => a.value - b.value);
+                console.log(seriesData)
+                for (let i = 0; i < 10 && i < seriesData.length; i++) {
+                    selected.push(seriesData[i].name);
+                }
+                data = {
+                    seriesData,
+                    legendData,
+                    selected,
+                    title: item.name
+                };
+                var dom = $(`
+                                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-header">
+                            ` + item.name + `
+                            <a class="float-right layui-icon layui-icon-close" onclick="closeCard(this)"></a>
+                        </div>
+                        <div class="layui-card-body"  style="height: 400px">
+
+
+                        </div>
+                    </div>
+                </div>
+`);
+                $("#operation").after(dom);
+                createEchart(data, chartType, dom.find(".layui-card-body")[0])
+                return
+                option = {
+                    title: {
+                        text: data.title != null ? data.title : "" + '统计',
+                        left: 'center'
+                    },
+
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: '{a} <br/>{b} : {c} ({d}%)'
+                    },
+                    legend: {
+                        type: 'scroll',
+                        orient: 'vertical',
+                        right: 10,
+                        top: 20,
+                        bottom: 20,
+                        data: data.legendData,
+
+                        selected: data.selected
+                    },
+                    series: [
+                        {
+                            name: '选项',
+                            label: {
+                                show: true
+                            },
+                            type: 'pie',
+                            radius: '55%',
+                            center: ['40%', '50%'],
+                            data: data.seriesData,
+                            emphasis: {
+                                itemStyle: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            }
+                        }
+                    ]
+                };
+                let myChart = echarts.init(dom.find(".layui-card-body")[0]);
+                myChart.setOption(option);
+            }
+        })
+
+
+    })
+
+    function createEchart(data, type, ele) {
+        let option = {};
+        switch (parseInt(type)) {
+            case 1:
+                option = {
+                    backgroundColor: '#2c343c',
+
+                    title: {
+                        text: data.title+'统计',
+                        left: 'center',
+                        top: 20,
+                        textStyle: {
+                            color: '#ccc'
+                        }
+                    },
+
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: '{a} <br/>{b} : {c} ({d}%)'
+                    },
+
+                    visualMap: {
+                        show: false,
+                        min: parseInt(data.seriesData[0].value),
+                        max: parseInt(data.seriesData[data.seriesData.length-1].value)+5,
+                        inRange: {
+                            colorLightness: [0, 1]
+                        }
+                    },
+                    series: [
+                        {
+                            name: '访问来源',
+                            type: 'pie',
+                            radius: '55%',
+                            center: ['50%', '50%'],
+                            data:data.seriesData,
+                            roseType: 'radius',
+                            label: {
+                                color: 'rgba(255, 255, 255, 0.3)'
+                            },
+                            labelLine: {
+                                lineStyle: {
+                                    color: 'rgba(255, 255, 255, 0.3)'
+                                },
+                                smooth: 0.2,
+                                length: 10,
+                                length2: 20
+                            },
+                            itemStyle: {
+                                color: '#c23531',
+                                shadowBlur: 200,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            },
+
+                            animationType: 'scale',
+                            animationEasing: 'elasticOut',
+                            animationDelay: function (idx) {
+                                return Math.random() * 200;
+                            }
+                        }
+                    ]
+                };
+                break;
+            case 2:
+                 option = {
+                    title: {
+                        text: data.title != null ? data.title : "" + '统计',
+                        left: 'center'
+                    },
+
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: '{a} <br/>{b} : {c} ({d}%)'
+                    },
+                    legend: {
+                        type: 'scroll',
+                        orient: 'vertical',
+                        right: 10,
+                        top: 20,
+                        bottom: 20,
+                        data: data.legendData,
+                        selected: data.selected
+                    },
+                    series: [
+                        {
+                            name: '选项',
+                            label: {
+                                show: true
+                            },
+                            type: 'pie',
+                            radius: '55%',
+                            center: ['40%', '50%'],
+                            data: data.seriesData,
+                            emphasis: {
+                                itemStyle: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            }
+                        }
+                    ]
+                };
+                break;
+            case 3:
+                option = {
+                    title: {
+                        text: data.title != null ? data.title : "" + '统计',
+                        left: 'center'
+                    },
+                    color: ['#3398DB'],
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: [
+                        {
+                            type: 'category',
+                            data: data.seriesData.map(e=>e.name),
+                            axisTick: {
+                                alignWithLabel: true
+                            }
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value'
+                        }
+                    ],
+                    series: [
+                        {
+                            name: '选择次数',
+                            type: 'bar',
+                            barWidth: '60%',
+                            data: data.seriesData.map(e=>e.value)
+                        }
+                    ]
+                };
+
+                break;
+            case 4:
+                break;
+        }
+        let myChart = echarts.init(ele);
+        console.log(option)
+        myChart.setOption(option);
+
     }
 
     function loadActInfo() {
@@ -264,9 +578,14 @@
     }
 
     var times = 0;
+    var timer = null;
 
     function deleteActivity() {
         times++;
+        clearTimeout(timer);
+        setTimeout(function () {
+            times = 0;
+        }, 5000);
         if (times === 3) {
             times = 0;
             deleteAct(getSearchObj().id, function (data) {
@@ -277,7 +596,7 @@
             });
             return;
         }
-        layui.layer.log("危险功能，点击" + (3 - times) + "次后才能继续删除");
+        layui.layer.msg("危险功能，5秒内点击" + (3 - times) + "次后才能继续删除");
     }
 
     function pageOK() {
@@ -293,6 +612,7 @@
             , url: '/partake/successList/' + actId //数据接口
             , title: '已完成的参与'
             , page: true //开启分页
+
             , request: {
                 pageName: 'curr' //页码的参数名称，默认：page
                 , limitName: 'size' //每页数据量的参数名，默认：limit
@@ -331,8 +651,13 @@
             elem: '#check_table'
             , height: 420
             , url: '/partake/check/' + actId //数据接口
-            , title: '已完成的参与'
+            , title: '待审核列表'
             , page: true //开启分页
+            , done: function (res, curr, count) {
+                if (count == 0) {
+                    setTimeout(() => $('#check_table').parent().parent().parent().fadeOut(300), 3000)
+                }
+            }
             , request: {
                 pageName: 'curr' //页码的参数名称，默认：page
                 , limitName: 'size' //每页数据量的参数名，默认：limit
@@ -396,7 +721,6 @@
         getWaitCheckPartakes();
     }
 
-
     function getWaitCheckPartakes() {
         var id = getSearchObj().id;
         getCheckParts(id, function (data) {
@@ -406,6 +730,34 @@
             }
 
         });
+    }
+
+
+    function chart(type) {
+        console.log(type)
+        if (actForms == null) {
+            getActFormList(getSearchObj().id, function (data) {
+                actForms = data.data;
+                chart(type);
+            });
+
+            return;
+        }
+
+        $("select.form option").remove();
+        $("select.type").val(type);
+        for (let item of actForms) {
+            let disabled = item.type == 2 ? "disabled" : "";
+            $("select.form").append("<option " + disabled + " value='" + item.id + "'>" + item.name + "</option>")
+        }
+        layui.form.render('select');
+
+        layer.open({
+            type: 1,
+            area: ['500px', '300px'],
+            content: $('#app') //这里content是一个普通的String
+        });
+
     }
 
 </script>

@@ -64,6 +64,11 @@ public class PartakeServiceImpl implements PartakeService {
     }
 
     @Override
+    public Integer count(Example<Partake> example) {
+        return partakeDao.count(example);
+    }
+
+    @Override
     public void listByExampleAndPage(Example<Partake> example, Page<Partake> page) {
         page.setCount(partakeDao.countByExample(example));
         page.render();

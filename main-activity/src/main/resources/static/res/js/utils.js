@@ -492,6 +492,19 @@ function getMyInfo(resp) {
     })
 }
 
+// 获取当前登录用户的活动信息
+function getMyActData(resp) {
+    var url = "/my/actData";
+    $.ajax({
+        url: url,
+        success: function (data) {
+            codeCheck(data);
+            resp(data);
+        },
+        error: errorCheck,
+    })
+}
+
 // 获得当前用户发布的活动
 function getMyActListByState(state, page, resp) {
     var url = "/act/state/" + state;
@@ -528,4 +541,18 @@ function getMyPartListByState(state, page, resp) {
         error: errorCheck,
     })
 
+}
+
+
+// 获取表单项的用户提交选项分析
+function getFormItemAnalysis(formId,resp) {
+    var url = "/data/"+formId;
+    $.ajax({
+        url: url,
+        success: function (data) {
+            codeCheck(data);
+            resp(data);
+        },
+        error: errorCheck,
+    })
 }

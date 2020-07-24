@@ -1,6 +1,6 @@
 package com.ucpeo.activity.dao;
 
-import com.ucpeo.activity.bean.Act;
+
 import com.ucpeo.activity.bean.Res;
 import org.apache.ibatis.annotations.*;
 

@@ -1,5 +1,11 @@
 
 
+.my-nav{
+    top: 0;
+    position: sticky;
+    z-index: 999;
+}
+
 .site-h1 {
     margin-bottom: 20px;
     line-height: 60px;

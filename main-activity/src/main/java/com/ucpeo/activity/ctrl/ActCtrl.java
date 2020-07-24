@@ -12,14 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.geom.AffineTransform;
+
 import java.util.Date;
 import java.util.List;
 
 
 @RestController
 @RequestMapping("act")
-public class ActCtrl {
+public class ActCtrl implements ActState{
 
 
     @Autowired
@@ -29,6 +29,7 @@ public class ActCtrl {
     PartakeService partakeService;
 
 
+    //创建活动
     @PostMapping
     public Resp<Act> create(@SessionAttribute("loginUser") User loginUser, @RequestBody Act act) {
         if (StringUtils.isEmpty(act.getName()) || act.getRecruited() == null || act.getEndTime() == null) {
@@ -37,8 +38,8 @@ public class ActCtrl {
 
         act.setCreateTime(new Date());
         act.setCreateUser(loginUser);
+        act.setEndTime(act.getCreateTime());
         act.setState(ActState.ACT_STATE_CREATE);
-        System.out.println(loginUser == null);
         act.setEnForm(false);
         act.setEnRes(false);
         actService.create(act);
@@ -86,14 +87,14 @@ public class ActCtrl {
     }
 
     @GetMapping("stop/{id}")
-    public Resp stop(@PathVariable("id") Integer id) {
+    public Resp<Void> stop(@PathVariable("id") Integer id) {
         Act act = actService.get(id);
         if (ActState.ACT_STATE_TASK == act.getState()) {
             act.setState(ActState.ACT_STATE_FINISH);
             actService.update(act);
-            return new Resp();
+            return new Resp<>();
         }
-        return new Resp("失败", 400, null);
+        return new Resp<>("失败", 400, null);
     }
 
     @GetMapping("baseInfo/{id}")
@@ -111,9 +112,9 @@ public class ActCtrl {
     }
 
     @DeleteMapping("{id}")
-    public Resp delete(@PathVariable("id") Integer id) {
+    public Resp<Void> delete(@PathVariable("id") Integer id) {
         actService.delete(id);
-        return new Resp();
+        return new Resp<>();
     }
 
 

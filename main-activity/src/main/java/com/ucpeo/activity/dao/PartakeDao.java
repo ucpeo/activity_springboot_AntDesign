@@ -85,10 +85,10 @@ public interface PartakeDao extends BaseDao<Partake> {
             "<if test='e.user!=null'>" +
             " `user_id`=#{e.user.id}  and" +
             "</if>" +
-            "  `activity_id` is not null "+
+            "  `activity_id` is not null " +
             " <if test='e._start != null'>" +
             " limit #{e._start} , #{e._end} " +
-            "</if>"+
+            "</if>" +
             "</script>")
     List<Partake> listByExample(@Param("e") Example example);
 
@@ -103,9 +103,12 @@ public interface PartakeDao extends BaseDao<Partake> {
             "<if test='e.user!=null'>" +
             " `user_id`=#{e.user.id}  and" +
             "</if>" +
-            "  `activity_id` is not null "+
+            "  `activity_id` is not null " +
             "</script>")
     Integer countByExample(@Param("e") Example example);
 
+    default Integer count(@Param("e") Example example) {
+        return countByExample(example);
+    }
 
 }

@@ -35,12 +35,12 @@ public class partFormCtrl {
 
     // 提交活动表单
     @PostMapping("partake/{id}")
-    public Resp submitPartForm(@SessionAttribute("loginUser") User user, @PathVariable("id") Integer id, @RequestBody JSONObject jsonData) {
+    public Resp<Void> submitPartForm(@SessionAttribute("loginUser") User user, @PathVariable("id") Integer id, @RequestBody JSONObject jsonData) {
         Partake partake = partakeService.get(id);
         if (!partake.getUser().getId().equals(user.getId()))
-            return new Resp("您无法提交,所属参与者才允许提交", 429, null);
+            return new Resp<>("您无法提交,所属参与者才允许提交", 429, null);
         if (!partake.getAct().getState().equals(ActState.ACT_STATE_TASK) || !partake.getState().equals(PartakeState.PART_STATE_ING)) {
-            return new Resp("无法提交,请检查状态", 400, null);
+            return new Resp<>("无法提交,请检查状态", 400, null);
         }
 
         partake.getPartFormInputList().forEach(e->partFormService.delete(e.getId()));

@@ -39,6 +39,8 @@ public interface PartakeService {
 
     List<Partake> listByExample(Example<Partake> example);
 
+    Integer count(Example<Partake> example);
+
     void  listByExampleAndPage(Example<Partake> example, Page<Partake> page);
 
 

@@ -6,6 +6,7 @@
     <title>天天活动-用户中心</title>
     <link rel="stylesheet" href="res/layui/css/layui.css">
     <link rel="stylesheet" href="res/css/global.css">
+    <link rel="stylesheet" href="res/css/dashboard.css">
 </head>
 <body class="">
 <div class="my-nav layui-bg-cyan">
@@ -22,10 +23,8 @@
 <div class="layui-fluid" style="margin-top: 50px">
 </div>
 <div class="layui-fluid">
-    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <fieldset class="layui-elem-field site-demo-button" style="margin-top: 50px;padding: 20px 15px">
         <legend>用户资料</legend>
-    </fieldset>
-    <div style="padding: 0 15px">
         <table class="layui-table">
             <thead>
             <th>用户名</th>
@@ -44,38 +43,94 @@
             </tr>
             </tbody>
         </table>
-        <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;padding: 20px 15px">
-            <legend>功能管理</legend>
-            <div>
-                <a type="button" href="act-create.html" class="layui-btn layui-btn-primary">创建活动</a>
-                <a href="my-partake.html"  class="layui-btn layui-btn-primary">我的参与</a>
-                <a href="my-activity.html" class="layui-btn layui-btn-primary">我的主持</a>
-                <a href="rest.html" class="layui-btn layui-btn-primary">修改密码</a>
-                <a href="/user/logout"  class="layui-btn layui-btn-primary">退出登录</a>
+    </fieldset>
+
+
+    <fieldset class="layui-elem-field site-demo-button" style="margin-top: 50px;padding: 20px 15px">
+        <legend>功能管理</legend>
+        <div>
+            <a type="button" href="act-create.html" class="layui-btn layui-btn-primary">创建活动</a>
+            <a href="my-partake.html" class="layui-btn layui-btn-primary">我的参与</a>
+            <a href="my-activity.html" class="layui-btn layui-btn-primary">我的主持</a>
+            <a href="rest.html" class="layui-btn layui-btn-primary">修改密码</a>
+            <a href="/user/logout" class="layui-btn layui-btn-primary">退出登录</a>
+        </div>
+    </fieldset>
+
+    <fieldset id="myActInfoArea" class="layui-elem-field site-demo-button" style="margin-top: 50px;padding: 20px 15px">
+        <legend>个人数据</legend>
+        <div>
+            <div class="layui-card-body" style="padding: 0 0;">
+                <div class="" lay-anim="" lay-indicator="inside" lay-arrow="none" style="width: 100%; ">
+                    <div carousel-item="">
+                        <ul class="layui-row layui-col-space10 bg-white">
+                            <li class="layui-col-xs4">
+                                <a class="layadmin-backlog-body">
+                                    <h3>我的参与的活动</h3>
+                                    <p><cite>{{partAll}}</cite></p>
+                                </a>
+                            </li>
+                            <li class="layui-col-xs4">
+                                <a class="layadmin-backlog-body">
+                                    <h3>参与进行中</h3>
+                                    <p><cite>{{partIng}}</cite></p>
+                                </a>
+                            </li>
+                            <li class="layui-col-xs4">
+                                <a class="layadmin-backlog-body">
+                                    <h3>参与完成</h3>
+                                    <p><cite>{{partFinish}}</cite></p>
+                                </a>
+                            </li>
+                            <li class="layui-col-xs4">
+                                <a class="layadmin-backlog-body">
+                                    <h3>我发起的活动</h3>
+                                    <p><cite>{{actAll}}</cite></p>
+                                </a>
+                            </li>
+
+                            <li class="layui-col-xs4">
+                                <a href="javascript:;" class="layadmin-backlog-body">
+                                    <h3>发起进行中</h3>
+                                    <p><cite>{{actIng}}</cite></p>
+                                </a>
+                            </li>
+
+                            <li class="layui-col-xs4">
+                                <a href="javascript:;" class="layadmin-backlog-body">
+                                    <h3>发起完成</h3>
+                                    <p><cite>{{actFinish}}</cite></p>
+                                </a>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
             </div>
-        </fieldset>
-    </div>
+        </div>
+    </fieldset>
+</div>
 
-    <div class="fix-card layui-card">
-        <div class="layui-card-header">
-            我参与的活动
-        </div>
-        <div class="layui-card-body">
-            <ul class="my-part-list">
-            </ul>
-
-        </div>
+<div class="fix-card layui-card">
+    <div class="layui-card-header">
+        我参与的活动
     </div>
-    <div class="fix-card layui-card">
-        <div class="layui-card-header">
-            我发起的活动
-        </div>
-        <div class="layui-card-body">
-            <ul class="act-list my-list">
+    <div class="layui-card-body">
+        <ul class="my-part-list">
+        </ul>
 
-            </ul>
-        </div>
     </div>
+</div>
+<div class="fix-card layui-card">
+    <div class="layui-card-header">
+        我发起的活动
+    </div>
+    <div class="layui-card-body">
+        <ul class="act-list my-list">
+
+        </ul>
+    </div>
+</div>
 </div>
 
 <div class="layui-footer footer footer-index">
@@ -101,9 +156,24 @@
         </div>
     </div>
 </div>
-
 <script src="res/layui/layui.all.js"></script>
 <script src="res/js/utils.js"></script>
+<script src="res/js/vue.min.js"></script>
+<script>
+    const app = new Vue({
+        el: "#myActInfoArea",
+        data: {
+            actAll: "",
+            actIng: "",
+            actFinish: "",
+            partAll: "",
+            partIng: "",
+            partFinish: "",
+
+        }
+    })
+</script>
+
 <script>
     var $ = layui.jquery;
     $(document).ready(function () {
@@ -115,8 +185,6 @@
                         return;
                     $(".my-part-list").append(createPartDom(data));
                 });
-
-
             }
         });
         $.ajax({
@@ -133,16 +201,14 @@
 
             }
         });
-        getMyInfo(function (data) {
+        getMyActData(function (data) {
             if (data.code !== 0) {
                 return;
             }
-            var userInfo = data.data;
-            $("#username").text(userInfo.username);
-            $("#fullName").text(userInfo.fullName);
-            $("#phone").text(userInfo.phone);
-            $("#email").text(userInfo.email);
-            $("#birthday").text(layui.util.toDateString(userInfo.birthday, "yyyy-MM-dd"));
+            var actdata = data.data;
+            for (let actdataKey in actdata) {
+                app[actdataKey] = actdata[actdataKey];
+            }
         });
     });
 </script>

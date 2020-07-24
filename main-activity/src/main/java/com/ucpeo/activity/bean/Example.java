@@ -22,5 +22,6 @@ public class Example<T> extends HashMap {
         example.putAll(new BeanMap(exam));
         return example;
     }
+
 }
 

@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 public class Resp<T> {
     public String msg = "success";
     public Integer code = 0;
-
     public T data;
+
+    public Resp(T data){
+        this.data=data;
+    }
 }
