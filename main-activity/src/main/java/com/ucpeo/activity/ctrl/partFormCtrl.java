@@ -12,6 +12,7 @@ import com.ucpeo.activity.service.PartakeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
 @RestController
@@ -37,13 +38,15 @@ public class partFormCtrl {
     @PostMapping("partake/{id}")
     public Resp<Void> submitPartForm(@SessionAttribute("loginUser") User user, @PathVariable("id") Integer id, @RequestBody JSONObject jsonData) {
         Partake partake = partakeService.get(id);
+        if (partake == null)
+            return new Resp(400, "参与表不存在");
         if (!partake.getUser().getId().equals(user.getId()))
             return new Resp<>("您无法提交,所属参与者才允许提交", 429, null);
         if (!partake.getAct().getState().equals(ActState.ACT_STATE_TASK) || !partake.getState().equals(PartakeState.PART_STATE_ING)) {
             return new Resp<>("无法提交,请检查状态", 400, null);
         }
 
-        partake.getPartFormInputList().forEach(e->partFormService.delete(e.getId()));
+        partake.getPartFormInputList().forEach(e -> partFormService.delete(e.getId()));
 
         jsonData.keySet().forEach((key) -> {
             ActForm actForm = actFormService.get(Integer.valueOf(key)); //表单
@@ -82,6 +85,27 @@ public class partFormCtrl {
 
         return new Resp<>();
     }
+
+    /**
+     * 获取对应状态的参与表
+     */
+    @GetMapping("/list/{id}/{state}")
+    public Resp<List<Partake>> getPartakeByState(Page<Partake> page, @PathVariable("id") Integer id,@PathVariable("state") Integer state) {
+        Partake partake = new Partake();
+        for (Field field : PartakeState.class.getDeclaredFields()) {
+            System.out.println(field.getName());
+        }
+        partake.setState(state);
+        Act act = new Act();
+        act.setId(id);
+        partake.setAct(act);
+        Example<Partake> partakeExample = Example.parse(partake);
+
+        partakeService.listByExampleAndPage(partakeExample, page);
+
+        return page;
+    }
+
 
     @GetMapping("listByPart/{id}")
     public Resp<List<PartForm>> getPartFormList(@PathVariable("id") Integer partId) {
