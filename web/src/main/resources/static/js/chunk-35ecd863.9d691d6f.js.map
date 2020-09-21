@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack:///./node_modules/ant-design-vue/lib/badge/style/css.js"],"names":[],"mappings":"uIAEA,EAAQ,QAER,EAAQ","file":"js/chunk-35ecd863.9d691d6f.js","sourcesContent":["'use strict';\n\nrequire('../../style/index.css');\n\nrequire('./index.css');"],"sourceRoot":""}

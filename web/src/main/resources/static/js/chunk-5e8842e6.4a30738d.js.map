@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack:///./node_modules/ant-design-vue/lib/collapse/style/css.js"],"names":[],"mappings":"kHAEA,EAAQ,QAER,EAAQ,S","file":"js/chunk-5e8842e6.4a30738d.js","sourcesContent":["'use strict';\n\nrequire('../../style/index.css');\n\nrequire('./index.css');"],"sourceRoot":""}

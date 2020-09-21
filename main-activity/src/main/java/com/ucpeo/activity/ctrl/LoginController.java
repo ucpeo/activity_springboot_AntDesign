@@ -1,12 +1,10 @@
 package com.ucpeo.activity.ctrl;
 
-import com.alibaba.fastjson.JSON;
 import com.ucpeo.activity.bean.Resp;
 import com.ucpeo.activity.bean.User;
 
 import com.ucpeo.activity.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

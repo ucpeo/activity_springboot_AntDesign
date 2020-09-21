@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack:///./node_modules/ant-design-vue/lib/avatar/style/css.js"],"names":[],"mappings":"2IAEA,EAAQ,QAER,EAAQ","file":"js/chunk-3b83e5a9.2b439aaf.js","sourcesContent":["'use strict';\n\nrequire('../../style/index.css');\n\nrequire('./index.css');"],"sourceRoot":""}

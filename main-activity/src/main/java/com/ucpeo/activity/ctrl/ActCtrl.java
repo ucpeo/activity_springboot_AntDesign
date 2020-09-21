@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("act")
-public class ActCtrl implements ActState{
+public class  ActCtrl implements ActState{
 
 
     @Autowired

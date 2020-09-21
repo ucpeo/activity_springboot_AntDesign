@@ -5,7 +5,9 @@ import lombok.Data;
 
 import java.util.List;
 
-
+/**
+ * 分页 继承resp
+ * */
 @Data
 public class Page<T> extends Resp<List<T>> {
     private Integer curr ; // 当前页

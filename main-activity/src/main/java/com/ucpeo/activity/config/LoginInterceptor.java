@@ -18,7 +18,6 @@ public class LoginInterceptor implements HandlerInterceptor {
             response.setHeader("content-type", "application/json;charset=UTF-8");
             response.setCharacterEncoding("utf-8");
             response.getWriter().print(JSON.toJSONString(resp));
-            response.setStatus(resp.getCode());
             return false;
         }
         return true;
