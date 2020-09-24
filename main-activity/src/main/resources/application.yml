@@ -19,6 +19,11 @@ spring:
   redis:
     host: yuyoyo.cn
     password: Yu1998cxl
+  application:
+    name: activity-service
+  cloud:
+    nacos:
+      server-addr: 127.0.0.1:8848
 mybatis:
   type-aliases-package: com.ucpeo.activity.bean
   mapper-locations: classpath:mapper/*.xml

@@ -1,7 +1,18 @@
 server:
-  port: 8080
+  port: 9090
 spring:
-  thymeleaf:
-    cache: true
-    prefix: classpath:/static/
-    suffix: .html
+#  thymeleaf:
+#    cache: false
+#    suffix: .html
+#    prefix:  classpath:/static/
+  application:
+    name: activity-web
+  cloud:
+    nacos:
+      server-addr: 127.0.0.1:8848
+  mvc:
+    view:
+      suffix: .html
+    static-path-pattern: /**
+  resources:
+    static-locations: classpath:/static/
