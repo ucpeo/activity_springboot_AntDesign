@@ -2,6 +2,8 @@ package com.ucpeo.activity.ctrl;
 
 import com.ucpeo.activity.bean.Res;
 import com.ucpeo.activity.dao.ResDao;
+import org.springframework.cloud.commons.httpclient.DefaultOkHttpClientFactory;
+import org.springframework.cloud.commons.httpclient.OkHttpClientFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +24,7 @@ public class ResCtrl {
         Res res = new Res();
         res.setType(1);
         res.setValue("45684135131");
-        resDao.create(res);
+        //resDao.create(res);
         return res;
     }
 
@@ -36,7 +38,6 @@ public class ResCtrl {
         return resDao.getAll();
     }
 
-
-
+    
 
 }

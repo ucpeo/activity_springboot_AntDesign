@@ -2,7 +2,7 @@ server:
   port: 8888
   servlet:
     session:
-      timeout: 30m
+      timeout: 10m
       cookie:
         path: /
 spring:
@@ -17,7 +17,7 @@ spring:
     password: root
     type:  com.alibaba.druid.pool.DruidDataSource
   redis:
-    host: yuyoyo.cn
+#    host: yuyoyo.cn #远程redis  默认使用本地redis
     password: Yu1998cxl
   application:
     name: activity-service
@@ -29,4 +29,5 @@ mybatis:
   mapper-locations: classpath:mapper/*.xml
 logging:
   level:
-    com.ucpeo.activity.dao : debug
+#    com.ucpeo.activity.dao : debug
+    com.ucpeo.activity.dao.ActDao : debug

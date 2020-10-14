@@ -30,13 +30,13 @@ public class UserCtrl {
 
     @GetMapping
     public Resp<User> myInfo(@SessionAttribute("loginUser") User user) {
-        return new Resp<>("suceess", 0, userService.get(user.getId()));
+        return new Resp<>("suceess", 0, user);
     }
 
     @PostMapping("changePassword")
     public Resp changePassword(@SessionAttribute("loginUser") User user, HttpSession session, String old, String psw) {
         User user1 = userService.get(user.getId());
-        //System.out.println(user1.getPassword()+":"+old+"\tnew :" + psw);
+        System.out.println(user1.getPassword()+":"+old+"\tnew :" + psw);
         if (user1.getPassword().equals(old)) {
             if (StringUtils.isEmpty(psw) || (psw.length() < 6) || (psw.length() > 16))
                 return new Resp("密码要求6-16位", 409, null);
