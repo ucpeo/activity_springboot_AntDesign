@@ -18,8 +18,8 @@ public class GatewayMain {
                         .uri("lb://activity-service"))
                 .route("path_route2", r -> r.method(HttpMethod.POST)
                         .uri("lb://activity-service"))
-                //.route("default",r->r.order(999).alwaysTrue().uri("lb://activity-web"))
-                .route("default",r->r.order(999).alwaysTrue().uri("http://127.0.0.1:8080"))
+                .route("default",r->r.order(999).alwaysTrue().uri("lb://activity-web"))
+//                .route("default",r->r.order(999).alwaysTrue().uri("http://127.0.0.1:8080"))
                 .build();
     }
 

@@ -45,6 +45,14 @@ public class Main {
                         return true;
                     }
                 }).addPathPatterns("/**");
+
+                registry.addInterceptor(new HandlerInterceptor() {
+                    @Override
+                    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+                        request.getRequestDispatcher("/index.html").forward(request,response);
+                        return false;
+                    }
+                }).excludePathPatterns("/css/**","/img/**","/js/**","/*.*").addPathPatterns("/**");
             }
         };
     };
